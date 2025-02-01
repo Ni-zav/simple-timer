@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .timer-container {
+            text-align: center;
+            padding: 2rem;
+            color: #333;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .timer-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #666;
+            min-height: 40px;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+        
+        #timeSlider {
+            width: 200px;
+            margin: 10px 0;
+        }
+        
+        .start-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .start-btn:hover {
+            background-color: #45a049;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .stop-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .stop-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Timer</h1>
+    <div class="timer-container">
+        <div class="timer-text">0 minutes | 0 seconds</div>
+        <div class="slider-container">
+            <input type="range" id="timeSlider" min="1" max="10" value="5" step="1">
+            <div id="sliderValue">5 minutes</div>
+        </div>
+        <div class="button-container">
+            <button class="start-btn" id="startBtn" onclick="startTimer()">Start Timer</button>
+            <button class="stop-btn" id="stopBtn" onclick="stopTimer()" style="display: none;">Stop Timer</button>
+        </div>
+    </div>
+
+    <script>
+        let timer;
+        const sliderElement = document.getElementById('timeSlider');
+        const sliderValue = document.getElementById('sliderValue');
+        const timerText = document.querySelector('.timer-text');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        sliderElement.addEventListener('input', function() {
+            sliderValue.textContent = this.value + ' minutes';
+        });
+
+        function startTimer() {
+            if (timer) clearInterval(timer);
+            
+            let totalSeconds = sliderElement.value * 60;
+            updateTimerDisplay(totalSeconds);
+
+            timer = setInterval(() => {
+                totalSeconds--;
+                updateTimerDisplay(totalSeconds);
+
+                if (totalSeconds <= 0) {
+                    stopTimer();
+                }
+            }, 1000);
+
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'inline-block';
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+            timer = null;
+            startBtn.style.display = 'inline-block';
+            stopBtn.style.display = 'none';
+        }
+
+        function updateTimerDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            timerText.textContent = `${minutes} minutes | ${remainingSeconds} seconds`;
+        }
+    </script>
+</body>
+</html>
